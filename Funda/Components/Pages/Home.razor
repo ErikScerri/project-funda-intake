@@ -1,0 +1,17 @@
+﻿@page "/"
+@using Funda.Services
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code {
+	private readonly FundaDataService fundaDataService;
+
+	public Home(FundaDataService fundaDataService)
+	{
+		this.fundaDataService = fundaDataService;
+	}
+}
