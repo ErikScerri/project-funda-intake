@@ -72,6 +72,7 @@ else
 		this.fundaPollingService = fundaPollingService;
 	}
 
+	/// <inheritdoc/>
 	protected override async Task OnInitializedAsync()
 	{
 		Task fetchDataAmsterdam = Task.Run(async () => topMakelaarsAmsterdam = await GetTopMakelaars(type: "koop", queries: ["amsterdam"], amount: 10));
@@ -86,6 +87,13 @@ else
 
 	}
 
+	/// <summary>
+	/// Polls a data feed and gets the top X makelaars by <see cref="MakelaarData.ListingCount"/>.
+	/// </summary>
+	/// <param name="type">The feed to poll, e.g. "koop".</param>
+	/// <param name="queries">The list of queries to filter the feed by, e.g. ["amsterdam", "tuin"].</param>
+	/// <param name="amount">The amount of sorted makelaars to include in the final list.</param>
+	/// <returns>A sorted array of <see cref="MakelaarData"/>, truncated to the specified amount.</returns>
 	private async Task<MakelaarData[]> GetTopMakelaars(string type, string[] queries, int amount = 10)
 	{
 		return (await fundaPollingService.PollMakelaars(type, queries))
