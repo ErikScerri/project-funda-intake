@@ -7,7 +7,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<IFundaDataService, FundaDataService>();
+builder.Services.AddSingleton<IFundaPollingService, FundaPollingService>();
 
 WebApplication app = builder.Build();
 

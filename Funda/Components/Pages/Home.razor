@@ -1,17 +1,96 @@
 ﻿@page "/"
+@using Funda.Models.Data
 @using Funda.Services
+@attribute [StreamRendering]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h2>Top 10 Makelaars (Amsterdam)</h2>
+@if (topMakelaarsAmsterdam == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th aria-label="Unique identifier of the Makelaar">Makelaar ID</th>
+				<th>Makelaar Name</th>
+				<th>Number of Listings</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var makelaar in topMakelaarsAmsterdam)
+			{
+				<tr>
+					<td>@makelaar.Id</td>
+					<td>@makelaar.Name</td>
+					<td>@makelaar.ListingCount</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
 
-Welcome to your new app.
+<h2>Top 10 Makelaars (Amsterdam, Tuin)</h2>
+@if (topMakelaarsAmsterdamTuin == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th aria-label="Unique identifier of the Makelaar">Makelaar ID</th>
+				<th>Makelaar Name</th>
+				<th>Number of Listings</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var makelaar in topMakelaarsAmsterdamTuin)
+			{
+				<tr>
+					<td>@makelaar.Id</td>
+					<td>@makelaar.Name</td>
+					<td>@makelaar.ListingCount</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
 
 @code {
-	private readonly FundaDataService fundaDataService;
+	private readonly IFundaPollingService fundaPollingService;
 
-	public Home(FundaDataService fundaDataService)
+	private MakelaarData[]? topMakelaarsAmsterdam;
+	private MakelaarData[]? topMakelaarsAmsterdamTuin;
+
+	public Home(IFundaPollingService fundaPollingService)
 	{
-		this.fundaDataService = fundaDataService;
+		this.fundaPollingService = fundaPollingService;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		Task fetchDataAmsterdam = Task.Run(async () => topMakelaarsAmsterdam = await GetTopMakelaars(type: "koop", queries: ["amsterdam"], amount: 10));
+		Task fetchDataAmsterdamTuin = Task.Run(async () => topMakelaarsAmsterdamTuin = await GetTopMakelaars(type: "koop", queries: ["amsterdam", "tuin"], amount: 10));
+
+		// Both tasks function independently but take different times to complete
+		// We re-render when any task finishes so that we don't have to wait for all tasks to complete before showing the tables
+		await foreach (Task finishedTask in Task.WhenEach(fetchDataAmsterdam, fetchDataAmsterdamTuin))
+		{
+			await InvokeAsync(StateHasChanged);
+		}
+
+	}
+
+	private async Task<MakelaarData[]> GetTopMakelaars(string type, string[] queries, int amount = 10)
+	{
+		return (await fundaPollingService.PollMakelaars(type, queries))
+			.OrderByDescending(m => m.ListingCount)
+			.Take(amount)
+			.ToArray();
 	}
 }
