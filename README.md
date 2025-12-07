@@ -1,7 +1,7 @@
 # Funda Test Assignment
 
 ## Introduction
-The assignment was implemented in a simple [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) web application, which is a web component framework that is bundled in with ASP.NET Core. No AI was used to develop this project, aside from the usual IntelliSense tools for quick fixing and autocompletion. 
+The assignment was implemented in a simple [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) web application, which is a web component framework that is bundled in with ASP.NET Core. **No AI was used to develop this project.**
 
 When the application is run, it should open a console window and a browser window. The former displays logging data to track the progress of the data polling. The latter provides a user interface where the recovered and processed data is displayed as the requested tables. Examples are provided below.
 
@@ -47,7 +47,7 @@ FixedWindowRateLimiterOptions options = new()
 
 Each iteration that fetches a page first waits for the limiter to tell it if it is ok to proceed within the fixed rate (`await limiter.AcquireAsync(1)`). Calls are queued up, so that once the 100 calls limit is reached, subsequent calls simply wait for the window to re-open and then proceed. Since the page size of 25 is quite small in relation to the several thousand objects that need to be recovered, the polling can take several minutes to complete. In a real scenario, a larger page size (or a lack of pagination entirely) would obviously be used to make this query faster, but for the purposes of this assignment it was better to show the rate limiter in action to show how call limit errors can be mitigated. 
 
-In terms of errors, if a request is not succesful or the returned data cannot be deserialised correctly, the polling task will catch the error and display an error log to the console, exiting gracefully. Once again, in a real scenario, it would likely be desirable to retry the call a number of times, or perhaps continue with incomplete data, but since these details were not specified as requirements in the assignment it was preferrable to simply catch and log the errors and neatly close the task as failed.
+In terms of errors, if a request is not succesful or the returned data cannot be deserialised correctly, the polling task will catch the error and display an error log to the console, exiting gracefully. Once again, in a real scenario, it would likely be desirable to have different behaviour for different status codes, such as: retry the call a number of times, or perhaps continue with incomplete data. But, since these details were not specified as requirements in the assignment, it was preferrable to simply catch and log the errors and neatly close the task as failed.
 
 ### Home.razor
 The data tables for the assignment are displayed by an [ASP.NET Core Razor component](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-10.0), which injects an implementation of `IFundaPollingService`, calls `PollMakelaars`, and uses the returned list of makelaar data to sort by listing count and generate a top 10 array, which is then displayed into a table by the component framework. This script is very simple, and passes on the implementation of data fetching to the service so as to separate concerns. 
