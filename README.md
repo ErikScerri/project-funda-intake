@@ -1,7 +1,7 @@
 # Funda Test Assignment
 
 ## Introduction
-The assignment was implemented in a simple [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) web application, which is a web component framework that is bundled in with ASP.NET Core. 
+The assignment was implemented in a simple [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) web application, which is a web component framework that is bundled in with ASP.NET Core. No AI was used to develop this project, aside from the usual IntelliSense tools for quick fixing and autocompletion. 
 
 When the application is run, it should open a console window and a browser window. The former displays logging data to track the progress of the data polling. The latter provides a user interface where the recovered and processed data is displayed as the requested tables. Examples are provided below.
 
@@ -15,6 +15,12 @@ When the application is run, it should open a console window and a browser windo
 <img width="2560" height="1410" alt="image" src="https://github.com/user-attachments/assets/3e855781-b91e-4d8c-872f-4235bb65257e" />
 
 ## Setup
+
+1. Clone or download the repository locally
+2. Open `project-funda-intake > Funda > Funda.sln` in Visual Studio 2022+ with the **ASP.NET and web development workload** and **.NET 9.0 Runtime**
+3. Run the application
+4. If prompted, trust ASP.NET Core SSL certificate and IIS Express SSL certificate
+5. Application should now be running correctly. Due to rate limits, runtime can take several minutes to display both tables.
 
 ### Packages Used
 
